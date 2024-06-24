@@ -1,0 +1,350 @@
+[
+    {
+        "rack_count": 7,
+        "aisle_id": "A01",
+        "racks": [
+            {
+                "x": 48,
+                "width": 96,
+                "y": 41,
+                "height": 82
+            },
+            {
+                "x": 48,
+                "width": 96,
+                "y": 126,
+                "height": 83
+            },
+            {
+                "x": 48,
+                "width": 96,
+                "y": 212,
+                "height": 82
+            },
+            {
+                "x": 48,
+                "width": 96,
+                "y": 297,
+                "height": 83
+            },
+            {
+                "x": 48,
+                "width": 96,
+                "y": 383,
+                "height": 82
+            },
+            {
+                "x": 48,
+                "width": 96,
+                "y": 468,
+                "height": 83
+            },
+            {
+                "x": 48,
+                "width": 96,
+                "y": 554,
+                "height": 83
+            }
+        ],
+        "x": 48,
+        "width": 96,
+        "y": 41,
+        "height": 596
+    },
+    {
+        "rack_count": 7,
+        "aisle_id": "A02",
+        "racks": [
+            {
+                "x": 190,
+                "width": 95,
+                "y": 43,
+                "height": 82
+            },
+            {
+                "x": 190,
+                "width": 95,
+                "y": 128,
+                "height": 83
+            },
+            {
+                "x": 190,
+                "width": 95,
+                "y": 214,
+                "height": 82
+            },
+            {
+                "x": 190,
+                "width": 95,
+                "y": 299,
+                "height": 83
+            },
+            {
+                "x": 190,
+                "width": 95,
+                "y": 385,
+                "height": 83
+            },
+            {
+                "x": 190,
+                "width": 95,
+                "y": 471,
+                "height": 82
+            },
+            {
+                "x": 190,
+                "width": 95,
+                "y": 556,
+                "height": 83
+            }
+        ],
+        "x": 190,
+        "width": 95,
+        "y": 43,
+        "height": 596
+    },
+    {
+        "rack_count": 3,
+        "aisle_id": "A03",
+        "racks": [
+            {
+                "x": 331,
+                "width": 98,
+                "y": 41,
+                "height": 82
+            },
+            {
+                "x": 432,
+                "width": 98,
+                "y": 41,
+                "height": 82
+            },
+            {
+                "x": 533,
+                "width": 98,
+                "y": 41,
+                "height": 82
+            }
+        ],
+        "x": 331,
+        "width": 300,
+        "y": 41,
+        "height": 82
+    },
+    {
+        "rack_count": 3,
+        "aisle_id": "A04",
+        "racks": [
+            {
+                "x": 331,
+                "width": 98,
+                "y": 169,
+                "height": 83
+            },
+            {
+                "x": 432,
+                "width": 98,
+                "y": 169,
+                "height": 83
+            },
+            {
+                "x": 533,
+                "width": 98,
+                "y": 169,
+                "height": 83
+            }
+        ],
+        "x": 331,
+        "width": 300,
+        "y": 169,
+        "height": 83
+    },
+    {
+        "rack_count": 3,
+        "aisle_id": "A05",
+        "racks": [
+            {
+                "x": 331,
+                "width": 98,
+                "y": 298,
+                "height": 83
+            },
+            {
+                "x": 432,
+                "width": 98,
+                "y": 298,
+                "height": 83
+            },
+            {
+                "x": 533,
+                "width": 98,
+                "y": 298,
+                "height": 83
+            }
+        ],
+        "x": 331,
+        "width": 300,
+        "y": 298,
+        "height": 83
+    },
+    {
+        "rack_count": 3,
+        "aisle_id": "A06",
+        "racks": [
+            {
+                "x": 331,
+                "width": 98,
+                "y": 427,
+                "height": 83
+            },
+            {
+                "x": 432,
+                "width": 98,
+                "y": 427,
+                "height": 83
+            },
+            {
+                "x": 533,
+                "width": 98,
+                "y": 427,
+                "height": 83
+            }
+        ],
+        "x": 331,
+        "width": 300,
+        "y": 427,
+        "height": 83
+    },
+    {
+        "rack_count": 3,
+        "aisle_id": "A07",
+        "racks": [
+            {
+                "x": 331,
+                "width": 98,
+                "y": 556,
+                "height": 83
+            },
+            {
+                "x": 432,
+                "width": 98,
+                "y": 556,
+                "height": 83
+            },
+            {
+                "x": 533,
+                "width": 98,
+                "y": 556,
+                "height": 83
+            }
+        ],
+        "x": 331,
+        "width": 300,
+        "y": 556,
+        "height": 83
+    },
+    {
+        "rack_count": 7,
+        "aisle_id": "A08",
+        "racks": [
+            {
+                "x": 677,
+                "width": 95,
+                "y": 41,
+                "height": 82
+            },
+            {
+                "x": 677,
+                "width": 95,
+                "y": 126,
+                "height": 83
+            },
+            {
+                "x": 677,
+                "width": 95,
+                "y": 212,
+                "height": 82
+            },
+            {
+                "x": 677,
+                "width": 95,
+                "y": 297,
+                "height": 83
+            },
+            {
+                "x": 677,
+                "width": 95,
+                "y": 383,
+                "height": 82
+            },
+            {
+                "x": 677,
+                "width": 95,
+                "y": 468,
+                "height": 83
+            },
+            {
+                "x": 677,
+                "width": 95,
+                "y": 554,
+                "height": 83
+            }
+        ],
+        "x": 677,
+        "width": 95,
+        "y": 41,
+        "height": 596
+    },
+    {
+        "rack_count": 7,
+        "aisle_id": "A09",
+        "racks": [
+            {
+                "x": 818,
+                "width": 95,
+                "y": 41,
+                "height": 83
+            },
+            {
+                "x": 818,
+                "width": 95,
+                "y": 127,
+                "height": 82
+            },
+            {
+                "x": 818,
+                "width": 95,
+                "y": 212,
+                "height": 83
+            },
+            {
+                "x": 818,
+                "width": 95,
+                "y": 298,
+                "height": 82
+            },
+            {
+                "x": 818,
+                "width": 95,
+                "y": 383,
+                "height": 83
+            },
+            {
+                "x": 818,
+                "width": 95,
+                "y": 469,
+                "height": 83
+            },
+            {
+                "x": 818,
+                "width": 95,
+                "y": 555,
+                "height": 82
+            }
+        ],
+        "x": 818,
+        "width": 95,
+        "y": 41,
+        "height": 596
+    }
+]

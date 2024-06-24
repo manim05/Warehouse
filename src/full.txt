@@ -1,0 +1,721 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+
+
+
+
+import { useState } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AisleRoom from './AisleRoom'
+import jsonData from './AisleData'
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<AisleRoom data={jsonData} />} /> 
+      </Routes>
+    </Router>
+  )
+}
+
+export default App;
+
+
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+
+import EntireRoom from './EntireRoom';
+import Room from './Room';
+import Aisle from './Aisle';
+
+const AisleRoom = (props) => {
+
+
+  
+  const jsonData = props.data
+
+  const { aisle, entireroom, room } = jsonData;
+
+  const { length, width, height } = entireroom;
+
+  return (
+    <div style={{ position: 'relative', height: '100vh' }}>
+      <Canvas   >
+        <ambientLight />
+
+        <PerspectiveCamera makeDefault position={[0, 0, 200]} fov={80} />
+
+        <OrbitControls    
+          initialZoom = {1000}
+          maxPolarAngle={Math.PI / 2.2}
+          enableZoom={true}
+          maxDistance={1000}
+          zoomToCursor={true}
+          // screenSpacePanning = {false}
+        />
+
+        <EntireRoom position={[0,0,0]} length={length} width={width} height={height}/>  
+
+        {aisle.map((aisle,index) => (
+        <Aisle
+          aisleId = {index}
+          bayCnt = {aisle.bayCnt}
+          position = {aisle.position}
+          rowCnt = {aisle.rowCnt}
+          rowwidth = {aisle.rowwidth}
+          rowLength = {aisle.rowLength}
+          rowHeight = {aisle.rowHeight}
+          tierCnt  = {aisle.tierCnt}
+        />
+      ))}
+
+
+
+
+        {room.map((room) => (
+        <Room
+          key = {room.id} position={room.position} length={room.length} width={room.width} height={room.height}
+        />
+      ))}
+
+      </Canvas>
+    </div>
+  );
+};
+
+export default AisleRoom;
+
+
+
+
+import React from 'react';
+import { Box , Text} from '@react-three/drei';
+
+const EntireRoom = ({ length, width, height}) => {
+  const halfLength = length / 2;
+  const halfwidth = width / 2;
+  const floorColor = '#cccccc' ;
+
+  return (
+    <>
+      {/* Back Wall */}
+      <Box position={[0, 0 - 0.3, -halfwidth]} args={[length, height, 0.1]} />
+
+      {/* Front Wall */}
+      <Box position={[0, 0 - 0.3, halfwidth]} args={[length, height, 0.1]} />
+
+      {/* Left Wall */}
+      <Box position={[-halfLength , 0 -0.3, 0]} args={[0.1, height, width]} />
+
+      {/* Right Wall */}
+      <Box position={[halfLength, 0 - 0.3, 0]} args={[0.1, height, width]} />
+
+      {/* Floor */}
+      <Box position={[0, -height / 2 - 0.3, 0]} args={[length, 0.1, width]} material-color={floorColor} />
+    
+    </>
+
+  );
+};
+
+export default EntireRoom;
+
+
+
+
+
+
+
+
+
+
+
+import React from 'react';
+import { Box } from '@react-three/drei';
+
+const Room = ({ position, length, width, height = 5 }) => {
+
+  const halfLength = length / 2;
+  const halfWidth = width / 2;
+  const color = 'black'
+
+  const [x, y, z] = position;
+
+  return (
+    <>
+      {/* Back Wall */}
+      <Box position={[x+halfLength, y, z ]} args={[length, height, 0.1]} material-color={color} />
+
+      {/* Front Wall */}
+      <Box position={[x+halfLength, y, z + width]} args={[length, height, 0.1]} material-color={color} />
+
+      {/* Left Wall */}
+      <Box position={[x, y, z+halfWidth ]} args={[0.1, height, width]} material-color={color} />
+
+      {/* Right Wall */}
+      <Box position={[x+length, y, z+halfWidth ]} args={[0.1, height, width]} material-color={color} />
+    </>
+  );
+};
+
+export default Room;
+
+
+
+import React from 'react';
+import WarehouseRack from './WarehouseRack';
+
+// aisle: "A01"
+// aisleText: "B09"
+// bayCnt: 6
+// positionX1: 630
+// positionY1: 525
+// rowCnt: 30
+// rowWidth: 10
+// rowheight: 12
+// tierCnt: 4
+
+
+const Aisle = ({ aisleId, bayCnt, position, rowCnt, rowwidth, rowLength = 25, rowHeight, tierCnt }) => {
+    
+  const [x, y, z] = position;
+  const shelfThickness = 0.1;
+
+  
+  const rackPositions = Array.from({ length: rowCnt  }, (_, index) => {
+    const rackZ = z + index * (rowwidth + shelfThickness*0.2 )  ;
+    return [x, y, rackZ];
+  });
+
+
+  return (
+    <>
+      {rackPositions.map((rackPosition) => (
+        <WarehouseRack 
+          key={aisleId}
+          position={rackPosition}
+          numShelves={tierCnt} 
+          height={rowHeight}
+          width={rowLength}
+          length={rowwidth}
+          bayCnt = {bayCnt}
+        />
+      ))}
+    </>
+  );
+};
+
+export default Aisle;
+
+
+
+import React from 'react';
+import { Box , Text} from '@react-three/drei';
+
+const WarehouseRack = ({ position, height ,width , length, numShelves}) => {
+
+  const [x, y, z] = position;
+
+  position = [x+length/2,y,z+width/2]
+
+  height = 30;
+  
+
+  const shelfWidth = width; 
+  const rackLength = length;
+  const shelfThickness = 0.1;
+  const rackPartition = 0.1 ;
+  const brownColor = '#8B4513'; 
+  const metalColor = '#F1EF99'; 
+  const sideColor = '#996633'; 
+  const backColor = '#663300'; 
+
+
+
+
+
+  const shelfPositions = [
+    { side: "left", position: [0, 0, -rackLength/2], args: [shelfWidth -0.05, height, rackPartition] , color : sideColor },
+    { side: "right", position: [0, 0, rackLength/2] , args: [shelfWidth -0.05, height, rackPartition], color : sideColor },
+    { side: "center", position: [0, 0, 0] , args: [shelfThickness, height, rackLength], color : brownColor },
+    { side: 'topShelf', position: [0, height/2, 0], args: [shelfWidth , shelfThickness, rackLength], color: backColor },
+    { side: 'bottomShelf',position: [0, -height / 2, 0], args: [shelfWidth , 0.2, rackLength], color: backColor }
+
+  ];
+
+
+  const startRange = -height/2;
+  const endRange = height/2;
+  const numPoints = numShelves+1;
+
+  const resultArray = Array.from({ length: numPoints }, (_, index) => startRange + index * ((endRange - startRange) / (numPoints - 1)));
+
+
+  for (let i = 1; i < numShelves; i++) {
+    shelfPositions.push({
+      position: [0, resultArray[i], 0],  
+      args: [shelfWidth-0.1, shelfThickness, rackLength],
+      side: `Shelf ${i + 1}`,
+      color: metalColor
+    });
+  }
+
+  return (
+    <group position={position} >
+      {shelfPositions.map((shelf) => (
+        <Box key={shelf.side} position={shelf.position} args={shelf.args}>
+          <meshStandardMaterial color={shelf.color} />
+        </Box>
+      ))}
+      {/* <Text position={[0, height / 2 + 1, -0.2]} 
+            fontSize={1} anchorX="center" anchorY="middle" material-color="white" >
+        {`X: ${position[0].toFixed(2)}, Y: ${position[1].toFixed(2)}, Z: ${position[2].toFixed(2)}`}
+      </Text> */}
+
+    </group>
+  );
+
+};
+
+export default WarehouseRack;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+import './index.css'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+
+
+
+
+import { useState } from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AisleRoom from './AisleRoom'
+import jsonData from './AisleData'
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<AisleRoom data={jsonData} />} /> 
+      </Routes>
+    </Router>
+  )
+}
+
+export default App;
+
+
+
+import React, { useEffect, useRef } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import * as YUKA from "yuka";
+import * as THREE from "three";
+
+import EntireRoom from './EntireRoom';
+import Room from './Room';
+import Aisle from './Aisle';
+
+const AisleRoom = (props) => {
+  
+  const jsonData = props.data;
+  const { aisle, entireroom, room } = jsonData;
+  const { length, width, height } = entireroom;
+
+  const vehicleRef = useRef(null);
+  const cameraRef = useRef(null);
+
+  const entityManager = new YUKA.EntityManager();
+
+  const path = new YUKA.Path();
+
+  path.add(new YUKA.Vector3(8, 0, 8));
+  path.add(new YUKA.Vector3(-8, 0, 8));
+  path.add(new YUKA.Vector3(-8, 0, -8));
+  path.add(new YUKA.Vector3(8, 0, -8));
+
+  path.loop = true;
+
+  const sync = (entity, renderComponent) => {
+    renderComponent.current.matrix.copy(entity.worldMatrix);
+  };
+
+  useEffect(() => {
+    vehicleRef.current = new THREE.Object3D(); // Initialize with a new THREE Object3D
+    vehicleRef.current.matrixAutoUpdate = false;
+    const vehicle = new YUKA.Vehicle();
+    vehicle.position.copy(path.current());
+    vehicle.setRenderComponent(vehicleRef, sync);
+    vehicle.maxSpeed = 4;
+    vehicle.mass = 10;
+    const pathFollow = new YUKA.FollowPathBehavior(path, 2);
+    vehicle.steering.add(pathFollow);
+    entityManager.add(vehicle);
+  }, []);
+
+  const time = new YUKA.Time();
+
+  let currentPosition = new THREE.Vector3();
+  let currentLookAt = new THREE.Vector3();
+
+  const calculateOffset = ({ position, rotation }, x, y, z) => {
+    const offSet = new THREE.Vector3(x, y, z);
+    offSet.applyQuaternion(rotation);
+    offSet.add(position);
+    return offSet;
+  };
+
+  useEffect(() => {
+    if (vehicleRef.current && cameraRef.current) {
+      let cameraPositionOffset = calculateOffset(entityManager.entities[0], 0, 2, -4);
+      let cameraFocusOffset = calculateOffset(entityManager.entities[0], 0, 1, 2);
+      const t = 1.0 - Math.pow(0.0025, 1 / 60); // Assuming 60 FPS
+      currentPosition.lerp(cameraPositionOffset, t);
+      currentLookAt.lerp(cameraFocusOffset, t);
+
+      cameraRef.current.position.copy(currentPosition);
+      cameraRef.current.lookAt(currentLookAt);
+
+      const d = time.update().getDelta();
+      entityManager.update(d);
+    }
+  }, []);
+
+  const handleZoom = () => {
+    if (cameraRef.current) {
+      const camera = cameraRef.current;
+      console.log("Camera Position:", camera.position.toArray());
+      console.log("Camera Rotation:", camera.rotation.toArray());
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (cameraRef.current) {
+        const camera = cameraRef.current;
+        const speed = 10; // Adjust this value to control the movement speed
+
+        switch (e.key) {
+          case 'ArrowUp':
+            camera.position.z -= speed;
+            break;
+          case 'ArrowDown':
+            camera.position.z += speed;
+            break;
+          case 'ArrowLeft':
+            camera.position.x -= speed;
+            break;
+          case 'ArrowRight':
+            camera.position.x += speed;
+            break;
+          default:
+            break;
+        }
+
+        // Update rotation to look at the moving object
+        if (vehicleRef.current) {
+          const lookAtPosition = vehicleRef.current.position.clone();
+          lookAtPosition.y += 2; // Adjust this value to control the height of the camera focus
+          camera.lookAt(lookAtPosition);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  return (
+    <div style={{ position: 'relative', height: '100vh' }}>
+      <Canvas>
+        <ambientLight />
+        <OrbitControls   
+          enableDamping={false} 
+          initialZoom={1000}
+          maxPolarAngle={Math.PI / 2.2}
+          enableZoom={true}
+          maxDistance={1020}
+          zoomToCursor={true}
+          onChange={handleZoom}
+        />
+        <pointLight position={[50, 10, 4]} />
+        <ambientLight intensity={0.3} />
+        <PerspectiveCamera ref={cameraRef} makeDefault position={[10, 10, 10]} />
+
+        <group ref={vehicleRef}>
+          <mesh position={[0, 0.5, 0]}>
+            <boxGeometry args={[0.8, 0.8, 1.2]} />
+            <meshStandardMaterial color={"yellow"} />
+          </mesh>
+        </group>
+
+        {/* EntireRoom, Aisle, and Room components here */}
+
+
+
+        <EntireRoom position={[0, 0, 0]} length={length} width={width} height={height} />
+        {aisle.map((aisle, index) => (
+           <Aisle
+             key={index}
+             aisleId={index}
+             bayCnt={aisle.bayCnt}
+             position={aisle.position}
+             rowCnt={aisle.rowCnt}
+             rowwidth={aisle.rowwidth}
+             rowLength={aisle.rowLength}
+             rowHeight={aisle.rowHeight}
+             tierCnt={aisle.tierCnt}
+           />
+         ))}
+         {room.map((room) => (
+           <Room
+             key={room.id}
+             position={room.position}
+             length={room.length}
+             width={room.width}
+             height={room.height}
+           />
+         ))}
+      </Canvas>
+    </div>
+  );
+};
+
+export default AisleRoom;
+
+
+
+
+
+import React from 'react';
+import { Box , Text} from '@react-three/drei';
+
+const EntireRoom = ({ length, width, height}) => {
+  const halfLength = length / 2;
+  const halfwidth = width / 2;
+  const floorColor = '#cccccc' ;
+
+  return (
+    <>
+      {/* Back Wall */}
+      <Box position={[0, 0 - 0.3, -halfwidth]} args={[length, height, 0.1]} />
+
+      {/* Front Wall */}
+      <Box position={[0, 0 - 0.3, halfwidth]} args={[length, height, 0.1]} />
+
+      {/* Left Wall */}
+      <Box position={[-halfLength , 0 -0.3, 0]} args={[0.1, height, width]} />
+
+      {/* Right Wall */}
+      <Box position={[halfLength, 0 - 0.3, 0]} args={[0.1, height, width]} />
+
+      {/* Floor */}
+      <Box position={[0, -height / 2 - 0.3, 0]} args={[length, 0.1, width]} material-color={floorColor} />
+    
+    </>
+
+  );
+};
+
+export default EntireRoom;
+
+
+
+
+
+
+
+
+
+
+
+import React from 'react';
+import { Box } from '@react-three/drei';
+
+const Room = ({ position, length, width, height = 5 }) => {
+
+  const halfLength = length / 2;
+  const halfWidth = width / 2;
+  const color = 'black'
+
+  const [x, y, z] = position;
+
+  return (
+    <>
+      {/* Back Wall */}
+      <Box position={[x+halfLength, y, z ]} args={[length, height, 0.1]} material-color={color} />
+
+      {/* Front Wall */}
+      <Box position={[x+halfLength, y, z + width]} args={[length, height, 0.1]} material-color={color} />
+
+      {/* Left Wall */}
+      <Box position={[x, y, z+halfWidth ]} args={[0.1, height, width]} material-color={color} />
+
+      {/* Right Wall */}
+      <Box position={[x+length, y, z+halfWidth ]} args={[0.1, height, width]} material-color={color} />
+    </>
+  );
+};
+
+export default Room;
+
+
+
+import React from 'react';
+import WarehouseRack from './WarehouseRack';
+
+// aisle: "A01"
+// aisleText: "B09"
+// bayCnt: 6
+// positionX1: 630
+// positionY1: 525
+// rowCnt: 30
+// rowWidth: 10
+// rowheight: 12
+// tierCnt: 4
+
+
+const Aisle = ({ aisleId, bayCnt, position, rowCnt, rowwidth, rowLength = 25, rowHeight, tierCnt }) => {
+    
+  const [x, y, z] = position;
+  const shelfThickness = 0.1;
+
+  
+  const rackPositions = Array.from({ length: rowCnt  }, (_, index) => {
+    const rackZ = z + index * (rowwidth + shelfThickness*0.2 )  ;
+    return [x, y, rackZ];
+  });
+
+
+  return (
+    <>
+      {rackPositions.map((rackPosition) => (
+        <WarehouseRack 
+          key={aisleId}
+          position={rackPosition}
+          numShelves={tierCnt} 
+          height={rowHeight}
+          width={rowLength}
+          length={rowwidth}
+          bayCnt = {bayCnt}
+        />
+      ))}
+    </>
+  );
+};
+
+export default Aisle;
+
+
+
+import React from 'react';
+import { Box , Text} from '@react-three/drei';
+
+const WarehouseRack = ({ position, height ,width , length, numShelves}) => {
+
+  const [x, y, z] = position;
+
+  position = [x+length/2,y,z+width/2]
+
+  height = 30;
+  
+
+  const shelfWidth = width; 
+  const rackLength = length;
+  const shelfThickness = 0.1;
+  const rackPartition = 0.1 ;
+  const brownColor = '#8B4513'; 
+  const metalColor = '#F1EF99'; 
+  const sideColor = '#996633'; 
+  const backColor = '#663300'; 
+
+
+
+
+
+  const shelfPositions = [
+    { side: "left", position: [0, 0, -rackLength/2], args: [shelfWidth -0.05, height, rackPartition] , color : sideColor },
+    { side: "right", position: [0, 0, rackLength/2] , args: [shelfWidth -0.05, height, rackPartition], color : sideColor },
+    { side: "center", position: [0, 0, 0] , args: [shelfThickness, height, rackLength], color : brownColor },
+    { side: 'topShelf', position: [0, height/2, 0], args: [shelfWidth , shelfThickness, rackLength], color: backColor },
+    { side: 'bottomShelf',position: [0, -height / 2, 0], args: [shelfWidth , 0.2, rackLength], color: backColor }
+
+  ];
+
+
+  const startRange = -height/2;
+  const endRange = height/2;
+  const numPoints = numShelves+1;
+
+  const resultArray = Array.from({ length: numPoints }, (_, index) => startRange + index * ((endRange - startRange) / (numPoints - 1)));
+
+
+  for (let i = 1; i < numShelves; i++) {
+    shelfPositions.push({
+      position: [0, resultArray[i], 0],  
+      args: [shelfWidth-0.1, shelfThickness, rackLength],
+      side: `Shelf ${i + 1}`,
+      color: metalColor
+    });
+  }
+
+  return (
+    <group position={position} >
+      {shelfPositions.map((shelf) => (
+        <Box key={shelf.side} position={shelf.position} args={shelf.args}>
+          <meshStandardMaterial color={shelf.color} />
+        </Box>
+      ))}
+      {/* <Text position={[0, height / 2 + 1, -0.2]} 
+            fontSize={1} anchorX="center" anchorY="middle" material-color="white" >
+        {`X: ${position[0].toFixed(2)}, Y: ${position[1].toFixed(2)}, Z: ${position[2].toFixed(2)}`}
+      </Text> */}
+
+    </group>
+  );
+
+};
+
+export default WarehouseRack;
+
+
+
+
